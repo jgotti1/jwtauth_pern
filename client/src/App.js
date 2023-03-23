@@ -1,7 +1,6 @@
 
 import React, { Fragment, useState, useEffect } from "react";
-//  import { ToastContainer, toast } from 'react-toastify';
-// import "react-toastify/dist/ReactToastify.css";
+import Toast from "./toast";
 
 import {
   BrowserRouter as Router,
@@ -17,12 +16,13 @@ import Login from "./Components/Login";
 import Register from "./Components/Register";
 import Dashboard from "./Components/Dashboard";
 
-// toast.configure();
 
-function App() {
+
+
+function App(props) {
   const checkAuthenticated = async () => {
     try {
-      const res = await fetch("http://localhost:5000/authentication/verify", {
+      const res = await fetch("http://localhost:5000/auth/verify", {
         method: "POST",
         headers: { jwt_token: localStorage.token }
       });
@@ -35,9 +35,9 @@ function App() {
     }
   };
 
-  // useEffect(() => {
-  //   checkAuthenticated();
-  // }, []);
+  useEffect(() => {
+    checkAuthenticated();
+  }, []);
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -48,20 +48,21 @@ function App() {
   return (
     <Fragment>
       <Router>
+      <Toast />
         <div className="container">
           <Routes>
             <Route path="/" element={<Login/>} exact />
             <Route
               path="/login"
-              element={!isAuthenticated ? <Login setAuth={setAuth} /> : <Navigate to="/dashboard" />}
+              element={!isAuthenticated ? <Login {...props} setAuth={setAuth} setIsAuthenticated={setIsAuthenticated} /> : <Navigate to="/dashboard" />}
             />
             <Route
               path="/register"
-              element={!isAuthenticated ? <Register setAuth={setAuth} /> : <Navigate to="/dashboard" />}
+              element={!isAuthenticated ? <Register {...props} setIsAuthenticated={setIsAuthenticated} setAuth={setAuth} /> : <Navigate to="/dashboard" />}
             />
             <Route
               path="/dashboard"
-              element={isAuthenticated ? <Dashboard setAuth={setAuth} /> : <Navigate to="/login" />}
+              element={isAuthenticated ? <Dashboard {...props} setAuth={setAuth} setIsAuthenticated={setIsAuthenticated} /> : <Navigate to="/login" />}
             />
           </Routes>
         </div>

@@ -15,6 +15,8 @@ app.get("/", async (req, res) => {
 
 //Routes to controllers
 app.use("/users", require("./controllers/usercontroller"));
+app.use("/auth", require("./controllers/jwtAuth"));
+app.use("/dashboard", require("./controllers/dashboard"));
 
 
 const port = process.env.PORT || 5001;

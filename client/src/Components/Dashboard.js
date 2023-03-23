@@ -7,17 +7,18 @@ const Dashboard = ({ setAuth }) => {
   const getProfile = async () => {
     try {
       const res = await fetch("http://localhost:5000/dashboard/", {
-        method: "POST",
+        method: "GET",
         headers: { jwt_token: localStorage.token }
       });
 
       const parseData = await res.json();
       setName(parseData.user_name);
+      console.log(parseData)
     } catch (err) {
       console.error(err.message);
     }
   };
-
+console.log(name)
   const logout = async e => {
     e.preventDefault();
     try {

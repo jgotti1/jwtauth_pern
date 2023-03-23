@@ -2,7 +2,7 @@ import React, { Fragment, useState } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { toast } from "react-toastify";
 
-const Register = ({ setAuth }) => {
+const Register = ({ setAuth, setIsAuthenticated }) => {
   const [inputs, setInputs] = useState({
     email: "",
     password: "",
@@ -19,7 +19,7 @@ const Register = ({ setAuth }) => {
     try {
       const body = { email, password, name };
       const response = await fetch(
-        "http://localhost:5000/authentication/register",
+        "http://localhost:5000/auth/register",
         {
           method: "POST",
           headers: {
@@ -28,14 +28,17 @@ const Register = ({ setAuth }) => {
           body: JSON.stringify(body)
         }
       );
+     
       const parseRes = await response.json();
+      console.log(`look here ${parseRes.jwtToken}`)
 
       if (parseRes.jwtToken) {
+        console.log("made it")
         localStorage.setItem("token", parseRes.jwtToken);
-        setAuth(true);
+        setIsAuthenticated(true);
         toast.success("Register Successfully");
       } else {
-        setAuth(false);
+        setIsAuthenticated(false);
         toast.error(parseRes);
       }
     } catch (err) {

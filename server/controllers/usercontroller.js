@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const cors = require("cors");
 const dotenv = require("dotenv");
-const database = require("../db/db");
+const database = require("../db/dbconnect");
 const app = express();
 
 app.use(cors());
