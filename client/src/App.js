@@ -20,30 +20,42 @@ import Dashboard from "./Components/Dashboard";
 
 
 function App(props) {
-  const checkAuthenticated = async () => {
-    try {
-      const res = await fetch("http://localhost:5000/auth/verify", {
-        method: "POST",
-        headers: { jwt_token: localStorage.token }
+
+const checkAuthenticated = () => {
+  const token = localStorage.getItem("jwt_token");
+  if (token) {
+    fetch("http://localhost:5000/auth/verify", {
+      method: "POST",
+      headers: { jwt_token: token },
+    })
+      .then((res) => res.json())
+      .then((parseRes) => {
+        setIsAuthenticated(parseRes);
+      })
+      .catch((err) => {
+        console.error(err.message);
       });
+  } else {
+    setIsAuthenticated(false);
+  }
+};
 
-      const parseRes = await res.json();
-
-      parseRes === true ? setIsAuthenticated(true) : setIsAuthenticated(false);
-    } catch (err) {
-      console.error(err.message);
-    }
-  };
+  // useEffect(() => {
+  //   checkAuthenticated();
+  // }, []);
 
   useEffect(() => {
-    checkAuthenticated();
+  checkAuthenticated();
+  setIsAuthenticated(!!localStorage.getItem("jwt_token"));
   }, []);
-
+  
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const setAuth = boolean => {
-    setIsAuthenticated(boolean);
-  };
+
+  const setAuth = (boolean) => {
+  setIsAuthenticated(boolean);
+  localStorage.setItem("jwt_token", boolean ? "true" : "");
+};
 
   return (
     <Fragment>
