@@ -40,9 +40,6 @@ const checkAuthenticated = () => {
   }
 };
 
-  // useEffect(() => {
-  //   checkAuthenticated();
-  // }, []);
 
   useEffect(() => {
   checkAuthenticated();
